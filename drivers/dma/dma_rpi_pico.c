@@ -221,7 +221,8 @@ static int dma_rpi_pico_reload(const struct device *dev, uint32_t ch, uint32_t s
 	data->channels[ch].dest_address = (void *)dst;
 	data->channels[ch].block_size = size;
 	dma_channel_configure(ch, &data->channels[ch].config, data->channels[ch].dest_address,
-			      data->channels[ch].source_address, data->channels[ch].block_size,
+			      data->channels[ch].source_address,
+			      data->channels[ch].block_size / data->channels[ch]->source_data_size,
 			      true);
 
 	return 0;
@@ -241,7 +242,8 @@ static int dma_rpi_pico_start(const struct device *dev, uint32_t ch)
 	dma_irqn_set_channel_enabled(dma_rpi_pico_channel_irq(dev, ch), ch, true);
 
 	dma_channel_configure(ch, &data->channels[ch].config, data->channels[ch].dest_address,
-			      data->channels[ch].source_address, data->channels[ch].block_size,
+			      data->channels[ch].source_address,
+			      data->channels[ch].block_size / data->channels[ch]->source_data_size,
 			      true);
 
 	return 0;
